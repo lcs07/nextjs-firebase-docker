@@ -1,0 +1,8 @@
+{
+  "h1": "간단 예제",
+  "change-locale": "언어 변경",
+  "to-second-page": "두번째 페이지",
+  "error-with-status": "A {{statusCode}} error occurred on server",
+  "error-without-status": "오류발생",
+  "title": "홈 | next-i18next"
+}
