@@ -25,13 +25,9 @@ firebase use nextjs-2022
 
 ## GCP Container Registry
 ```shell
-cd docker
-
 yarn
 
 gcloud builds submit --tag gcr.io/nextjs-2022/docker-nextjs --project nextjs-2022
-
-cd ..
 
 gcloud run deploy --image gcr.io/nextjs-2022/docker-nextjs --project nextjs-2022 --platform managed
 ```
@@ -46,20 +42,17 @@ gcloud artifacts repositories create docker-repo --repository-format=docker --lo
 gcloud artifacts repositories list
 
 gcloud auth configure-docker asia-northeast3-docker.pkg.dev
+```
 
 
-cd docker
-
+```shell
 yarn
 
 docker build -t docker-nextjs .
 
-cd ..
-
 docker run -p 3000:3000 docker-nextjs
 ```
-
-- http://localhost:3000
+> - http://localhost:3000
 
 
 > - https://cloud.google.com/artifact-registry/docs/docker/names?hl=ko
@@ -102,13 +95,9 @@ gcloud builds submit --config cloudbuild.yaml .
 
 ## Firebase Hosting
 ```shell
-cd firebase
-
 yarn
 
 yarn deploy
-
-cd ..
 ```
 
 
