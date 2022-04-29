@@ -1,47 +1,97 @@
 {
-  "hosting": {
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/img/**",
-        "destination": "/img"
-      },
-      {
-        "source": "/locales/**",
-        "destination": "/locales"
-      },
-      {
-        "source": "**",
-        "run": {
-          "serviceId": "docker-nextjs",
-          "region": "asia-northeast3"
+  "hosting": [
+    {
+      "site": "nextjs-2022",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/img/**",
+          "destination": "/img"
+        },
+        {
+          "source": "/locales/**",
+          "destination": "/locales"
+        },
+        {
+          "source": "**",
+          "run": {
+            "serviceId": "docker-nextjs",
+            "region": "asia-northeast3"
+          }
         }
-      }
-    ],
-    "headers": [
-      {
-        "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "*"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+          "headers": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ]
+        },
+        {
+          "source": "**/*.@(jpg|jpeg|gif|png)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=7200"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "test",
+      "site": "nextjs-2022-test",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/img/**",
+          "destination": "/img"
+        },
+        {
+          "source": "/locales/**",
+          "destination": "/locales"
+        },
+        {
+          "source": "**",
+          "run": {
+            "serviceId": "docker-nextjs",
+            "region": "asia-northeast3"
           }
-        ]
-      },
-      {
-        "source": "**/*.@(jpg|jpeg|gif|png)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "max-age=7200"
-          }
-        ]
-      }
-    ]
-  }
+        }
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+          "headers": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ]
+        },
+        {
+          "source": "**/*.@(jpg|jpeg|gif|png)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=7200"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

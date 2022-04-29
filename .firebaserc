@@ -1,12 +1,13 @@
 {
   "projects": {
-    "default": "nextjs-2022"
+    "default": "nextjs-2022",
+    "test": "nextjs-2022"
   },
   "targets": {
     "nextjs-2022": {
       "hosting": {
-        "web": [
-          "nextjs-2022"
+        "test": [
+          "nextjs-2022-test"
         ]
       }
     }
