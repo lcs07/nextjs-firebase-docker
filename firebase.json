@@ -48,7 +48,6 @@
     },
     {
       "target": "test",
-      "site": "nextjs-2022-test",
       "public": "public",
       "ignore": [
         "firebase.json",
