@@ -21,7 +21,14 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN yarn build
+# $ docker build -t docker-nextjs-dev --build-arg BUILD_TARGET=dev .
+# $ docker build -t docker-nextjs-test --build-arg BUILD_TARGET=test .
+# $ docker build -t docker-nextjs --build-arg BUILD_TARGET=prod .
+ARG BUILD_TARGET
+RUN echo "BUILD_TARGET: $BUILD_TARGET"
+
+# RUN yarn build:$BUILD_TARGET
+RUN yarn env:$BUILD_TARGET yarn next:build
 
 # If using npm comment out above and use below instead
 # RUN npm run build
@@ -29,9 +36,6 @@ RUN yarn build
 # Production image, copy all the files and run next
 FROM node:16-alpine AS runner
 WORKDIR /app
-
-ARG BUILD_TARGET
-RUN echo "BUILD_TARGET: $BUILD_TARGET"
 
 ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.

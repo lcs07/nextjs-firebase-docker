@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "site": "nextjs-2022",
+      "target": "development",
       "public": "public",
       "ignore": [
         "firebase.json",
@@ -20,7 +20,7 @@
         {
           "source": "**",
           "run": {
-            "serviceId": "docker-nextjs",
+            "serviceId": "docker-nextjs-dev",
             "region": "asia-northeast3"
           }
         }
@@ -48,6 +48,52 @@
     },
     {
       "target": "test",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/img/**",
+          "destination": "/img"
+        },
+        {
+          "source": "/locales/**",
+          "destination": "/locales"
+        },
+        {
+          "source": "**",
+          "run": {
+            "serviceId": "docker-nextjs-test",
+            "region": "asia-northeast3"
+          }
+        }
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+          "headers": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ]
+        },
+        {
+          "source": "**/*.@(jpg|jpeg|gif|png)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=7200"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "production",
       "public": "public",
       "ignore": [
         "firebase.json",
