@@ -1,0 +1,14 @@
+steps:
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs', '.', '--build-arg', 'BUILD_TARGET=prod', '--no-cache']
+# Push the container image to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs']
+# Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'docker-nextjs', '--image', 'asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs', '--platform', 'managed', '--region', 'asia-northeast3', '--allow-unauthenticated', '--memory', '512Mi', '--min-instances', '1']
+images:
+- asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs
+timeout: 1800s
