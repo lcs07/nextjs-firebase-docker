@@ -1,15 +1,21 @@
-import * as React from 'react'
-import Link from 'next/link'
+import React from 'react';
+import {useTranslation} from 'next-i18next';
+import Link from 'next/link';
 
-const Header = ({ pathname }) => (
-  <header>
-    <Link href="/">
-      <a className={pathname === '/' ? 'is-active' : ''}>Home</a>
-    </Link>{' '}
-    <Link href="/about">
-      <a className={pathname === '/about' ? 'is-active' : ''}>About</a>
-    </Link>
-  </header>
-)
+const Header = ({pathname}) => {
+  const {t} = useTranslation('common');
 
-export default Header
+  return (
+    <header>
+      <Link href='/'>
+        <a className={pathname === '/' ? 'is-active' : ''}>{t('home')}</a>
+      </Link>
+      {' '}
+      <Link href='/about'>
+        <a className={pathname === '/about' ? 'is-active' : ''}>{t('about')}</a>
+      </Link>
+    </header>
+  );
+};
+
+export default Header;
