@@ -8,7 +8,7 @@ steps:
 # Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'docker-nextjs', '--image', 'asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs', '--platform', 'managed', '--region', 'asia-northeast3', '--allow-unauthenticated', '--memory', '512Mi', '--min-instances', '1']
+  args: ['run', 'deploy', 'docker-nextjs', '--image', 'asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs', '--platform', 'managed', '--region', 'asia-northeast3', '--allow-unauthenticated', '--memory', '512Mi', '--min-instances', '0']
 images:
 - asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs
 timeout: 1800s

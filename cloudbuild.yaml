@@ -8,7 +8,7 @@ steps:
 # Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', '{IMAGE_NAME}', '--image', '{REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME}', '--platform', 'managed', '--region', '{REGION_NAME}', '--allow-unauthenticated', '--memory', '512Mi', '--min-instances', '1']
+  args: ['run', 'deploy', '{IMAGE_NAME}', '--image', '{REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME}', '--platform', 'managed', '--region', '{REGION_NAME}', '--allow-unauthenticated', '--memory', '512Mi', '--min-instances', '0']
 images:
 - {REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME}
 timeout: 1800s

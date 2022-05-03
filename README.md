@@ -338,7 +338,7 @@
     # Deploy container image to Cloud Run
     - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
       entrypoint: gcloud
-      args: ['run', 'deploy', '{IMAGE_NAME}', '--image', '{REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME}', '--platform', 'managed', '--region', '{REGION_NAME}', '--allow-unauthenticated', '--memory', '512Mi', '--min-instances', '1']
+      args: ['run', 'deploy', '{IMAGE_NAME}', '--image', '{REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME}', '--platform', 'managed', '--region', '{REGION_NAME}', '--allow-unauthenticated', '--memory', '512Mi', '--min-instances', '0']
     images:
     - {REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME}
     timeout: 1800s
@@ -363,7 +363,7 @@
       # Deploy container image to Cloud Run
       - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
         entrypoint: gcloud
-        args: ['run', 'deploy', 'docker-nextjs', '--image', 'asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs', '--platform', 'managed', '--region', 'asia-northeast3', '--allow-unauthenticated', '--memory', '512Mi', '--min-instances', '1']
+        args: ['run', 'deploy', 'docker-nextjs', '--image', 'asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs', '--platform', 'managed', '--region', 'asia-northeast3', '--allow-unauthenticated', '--memory', '512Mi', '--min-instances', '0']
       images:
       - asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs
       timeout: 1800s
@@ -397,17 +397,17 @@
   [--platform managed --region RUN-REGION]
   ```
   ```shell
-  gcloud run deploy {IMAGE_NAME} --image {REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME} --project {PROJECT_ID} --platform managed --region {REGION_NAME} --allow-unauthenticated --memory 512Mi --min-instances 1
+  gcloud run deploy {IMAGE_NAME} --image {REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME} --project {PROJECT_ID} --platform managed --region {REGION_NAME} --allow-unauthenticated --memory 512Mi --min-instances 0
   ```
 
   - 개발
     ```shell
-    gcloud run deploy docker-nextjs-dev --image asia-northeast3-docker.pkg.dev/nextjs-2022-dev/docker-repo/docker-nextjs-dev --project nextjs-2022-dev --platform managed --region asia-northeast3 --allow-unauthenticated --memory 512Mi --min-instances 1
+    gcloud run deploy docker-nextjs-dev --image asia-northeast3-docker.pkg.dev/nextjs-2022-dev/docker-repo/docker-nextjs-dev --project nextjs-2022-dev --platform managed --region asia-northeast3 --allow-unauthenticated --memory 512Mi --min-instances 0
     ```
 
   - 운영
     ```shell
-    gcloud run deploy docker-nextjs --image asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs --project nextjs-2022 --platform managed --region asia-northeast3 --allow-unauthenticated --memory 512Mi --min-instances 1
+    gcloud run deploy docker-nextjs --image asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs --project nextjs-2022 --platform managed --region asia-northeast3 --allow-unauthenticated --memory 512Mi --min-instances 0
     ```
 
 <br/><br/><br/>
