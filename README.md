@@ -7,6 +7,11 @@
   - [CI/CD 관련](#cicd-관련)
 - [CI/CD 설정](#cicd-설정)
   - [CI/CD 목표](#cicd-목표)
+  - [프로젝트 정보](#프로젝트-정보)
+    - [Project ID](#project-id)
+    - [Project Alias](#project-alias)
+    - [Firebase Hosting site name](#firebase-hosting-site-name)
+    - [GCP Cloud Run service name (Docker image name)](#gcp-cloud-run-service-name-docker-image-name)
   - [Firebase CLI](#firebase-cli)
   - [Google Cloud CLI](#google-cloud-cli)
   - [Docker](#docker)
@@ -65,6 +70,35 @@
   - 정적인 파일은 `Firebase Hosting`으로 제공하고 그외의 콘텐츠는 `Cloud Run`으로 연결
   - 정적인 파일은 빌드가 필요 없음
   - `GitHub Actions`로 `Firebase Hosting`에 배포
+
+<br/><br/><br/>
+
+## 프로젝트 정보
+### Project ID
+- 개발
+  - Project ID : `nextjs-2022-dev`
+  - Project Number : ``
+- 테스트, 운영
+  - Project ID : `nextjs-2022`
+  - Project Number : `28623504743`
+
+### Project Alias
+> - 프로젝트 별칭
+- 개발 : `development`
+- 테스트 : `test`
+- 운영 : `production`
+
+### Firebase Hosting site name
+- 개발 : `nextjs-2022-dev`
+- 테스트 : `nextjs-2022-test`
+- 운영 : `nextjs-2022`
+
+### GCP Cloud Run service name (Docker image name)
+> - Cloud Run service name은 Docker image name과 동일하지 않아도 됨
+> - 관리 편의를 위해 동일하게 처리
+- 개발 : `docker-nextjs-dev`
+- 테스트 : `docker-nextjs-test`
+- 운영 : `docker-nextjs`
 
 <br/><br/><br/>
 
