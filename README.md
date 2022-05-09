@@ -1,30 +1,70 @@
 # Next.js + Firebase + Cloud Run
 
-## 목차
+<br/><br/><br/>
+
+# 목차
 - [참고 자료](#참고-자료)
-- [Firebase CLI](#firebase-cli)
-- [Google Cloud CLI](#google-cloud-cli)
-- [Docker](#docker)
-- [GCP Artifact Registry](#gcp-artifact-registry)
-- [GCP Cloud Build](#gcp-cloud-build)
-- [GCP Cloud Run](#gcp-cloud-run)
-- [GitHub + GCP Cloud Build](#github--gcp-cloud-build)
-- [GitHub Actions + Firebase Hosting](#github-actions--firebase-hosting)
+  - [CI/CD 관련](#cicd-관련)
+- [CI/CD 설정](#cicd-설정)
+  - [CI/CD 목표](#cicd-목표)
+  - [Firebase CLI](#firebase-cli)
+  - [Google Cloud CLI](#google-cloud-cli)
+  - [Docker](#docker)
+  - [GCP Artifact Registry](#gcp-artifact-registry)
+  - [GCP Cloud Build](#gcp-cloud-build)
+  - [GCP Cloud Run](#gcp-cloud-run)
+  - [GitHub + GCP Cloud Build](#github--gcp-cloud-build)
+  - [GitHub Actions + Firebase Hosting](#github-actions--firebase-hosting)
 - [수동 배포](#수동-배포)
+  - [WEB에서 직접 배포](#web에서-직접-배포)
+  - [개발자 PC에서 직접 배포](#개발자-pc에서-직접-배포)
 
 <br/><br/><br/>
 
-## 참고 자료
-> - https://cloud.google.com/docs/ci-cd
-> - https://nextjs.org/docs/deployment#docker-image
-> - https://cloud.google.com/build?hl=ko
-> - https://cloud.google.com/build/docs/automating-builds/build-repos-from-github?hl=ko
-> - https://cloud.google.com/artifact-registry?hl=ko
-> - https://cloud.google.com/run?hl=ko
-> - https://firebase.google.com/docs/hosting/github-integration?hl=ko
-> - https://github.com/marketplace/actions/deploy-to-firebase-hosting
-> - https://lynn-kwong.medium.com/build-a-docker-image-with-cloud-build-in-google-cloud-platform-5f6840af2c05
-> - https://zzsza.github.io/gcp/2020/05/09/google-cloud-build/
+---
+
+<br/><br/><br/>
+
+# 참고 자료
+- ## CI/CD 관련
+  > - https://cloud.google.com/docs/ci-cd
+  > - https://nextjs.org/docs/deployment#docker-image
+  > - https://cloud.google.com/build?hl=ko
+  > - https://cloud.google.com/build/docs/automating-builds/build-repos-from-github?hl=ko
+  > - https://cloud.google.com/artifact-registry?hl=ko
+  > - https://cloud.google.com/run?hl=ko
+  > - https://firebase.google.com/docs/hosting/github-integration?hl=ko
+  > - https://github.com/marketplace/actions/deploy-to-firebase-hosting
+  > - https://lynn-kwong.medium.com/build-a-docker-image-with-cloud-build-in-google-cloud-platform-5f6840af2c05
+  > - https://zzsza.github.io/gcp/2020/05/09/google-cloud-build/
+
+<br/><br/><br/>
+
+---
+
+<br/><br/><br/>
+
+# CI/CD 설정
+
+## CI/CD 목표
+> - git `dev` 브랜치에 push(PR merge) 이벤트 발생시 개발, 테스트 서버에 자동 배포
+> - git `main` 브랜치에 push(PR merge) 이벤트 발생시 운영 서버에 자동 배포
+> - `Docker`를 사용해서 `Next.js` 다국어 지원(`next-i18next`) 관련 오류 해결
+> - `Firebase Functions`로 `Next.js` 사용시 서비스 제공에 오래 걸리는 문제 해결
+> - `Docker`를 이용하기 위해 `Firebase Hosting`과 연동 가능한 `Cloud Run` 서비스 사용
+> - 이미지 파일 등의 정적인 파일은 `Firebase Hosting`으로 제공
+> - `Next.js`에서 처리되어야 하는 동적인 컨텐츠는 `Cloud Run`으로 제공
+
+- `Next.js`
+  - `Docker` 이미지를 빌드하기 위해 `Cloud Build` 서비스 사용
+  - 빌드 된 이미지를 저장하기 위해 `Artifact Registry` 서비스 사용
+  - 빌드 된 이미지는 `Cloud Run` 서비스로 배포
+  - `Cloud Build`에서 `Cloud Run` 까지 빌드 및 배포 자동화를 위해 `Cloud Build`의 빌드 구성 파일 설정
+
+- 정적 파일
+  - 정적인 파일은 `Firebase Hosting`으로 제공하고 그외의 콘텐츠는 `Cloud Run`으로 연결
+  - 정적인 파일은 빌드가 필요 없음
+  - `GitHub Actions`로 `Firebase Hosting`에 배포
 
 <br/><br/><br/>
 
@@ -135,12 +175,7 @@
     gcloud config set project nextjs-2022-dev
     ```
 
-  - 테스트 프로젝트 전환
-    ```shell
-    gcloud config set project nextjs-2022
-    ```
-
-  - 운영 프로젝트 전환
+  - 테스트, 운영 프로젝트 전환
     ```shell
     gcloud config set project nextjs-2022
     ```
@@ -160,6 +195,11 @@
     docker build --build-arg BUILD_TARGET=dev -t docker-nextjs-dev .
     ```
 
+  - 테스트
+    ```shell
+    docker build --build-arg BUILD_TARGET=test -t docker-nextjs-test .
+    ```
+
   - 운영
     ```shell
     docker build --build-arg BUILD_TARGET=prod -t docker-nextjs .
@@ -173,6 +213,11 @@
   - 개발
     ```shell
     docker run -p 3000:3000 docker-nextjs-dev
+    ```
+
+  - 테스트
+    ```shell
+    docker run -p 3000:3000 docker-nextjs-test
     ```
 
   - 운영
@@ -218,12 +263,17 @@
 - Docker 이미지 주소 형식
   > - https://cloud.google.com/artifact-registry/docs/docker/names?hl=ko
   ```text
-  {GCP_LOCATION}-docker.pkg.dev/{GCP_PROJECT_ID}/{GCP_REPOSITORY}/{GCP_IMAGE_NAME}
+  {REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME}
   ```
 
   - 개발
     ```text
     asia-northeast3-docker.pkg.dev/nextjs-2022-dev/docker-repo/docker-nextjs-dev
+    ```
+
+  - 테스트
+    ```text
+    asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs-test
     ```
 
   - 운영
@@ -241,6 +291,11 @@
     docker tag docker-nextjs-dev asia-northeast3-docker.pkg.dev/nextjs-2022-dev/docker-repo/docker-nextjs-dev
     ```
 
+  - 테스트
+    ```shell
+    docker tag docker-nextjs-test asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs-test
+    ```
+
   - 운영
     ```shell
     docker tag docker-nextjs asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs
@@ -254,6 +309,11 @@
   - 개발
     ```shell
     docker push asia-northeast3-docker.pkg.dev/nextjs-2022-dev/docker-repo/docker-nextjs-dev
+    ```
+
+  - 테스트
+    ```shell
+    docker push asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs-test
     ```
 
   - 운영
@@ -273,6 +333,11 @@
   - 개발
     ```shell
     gcloud builds submit --tag asia-northeast3-docker.pkg.dev/nextjs-2022-dev/docker-repo/docker-nextjs-dev --project nextjs-2022-dev
+    ```
+
+  - 테스트
+    ```shell
+    gcloud builds submit --tag asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs-test --project nextjs-2022
     ```
 
   - 운영
@@ -326,7 +391,7 @@
       ```
 
   - Docker 이미지 생성 + Artifact Registry에 이미지 업로드 + Cloud Run 배포
-    - 파일명 : `cloudbuild.yaml`
+    - 샘플 파일명 : `cloudbuild.yaml`
     ```yml
     steps:
     # Build the container image
@@ -379,6 +444,11 @@
     gcloud builds submit --config cloudbuild.dev.yaml .
     ```
 
+  - 테스트
+    ```shell
+    gcloud builds submit --config cloudbuild.test.yaml .
+    ```
+
   - 운영
     ```shell
     gcloud builds submit --config cloudbuild.prod.yaml .
@@ -397,12 +467,17 @@
   [--platform managed --region RUN-REGION]
   ```
   ```shell
-  gcloud run deploy {IMAGE_NAME} --image {REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME} --project {PROJECT_ID} --platform managed --region {REGION_NAME} --allow-unauthenticated --memory 512Mi --min-instances 0
+  gcloud run deploy {SERVICE_NAME} --image {REGION_NAME}-docker.pkg.dev/{PROJECT_ID}/{REPOSITORY_NAME}/{IMAGE_NAME} --project {PROJECT_ID} --platform managed --region {REGION_NAME} --allow-unauthenticated --memory 512Mi --min-instances 0
   ```
 
   - 개발
     ```shell
     gcloud run deploy docker-nextjs-dev --image asia-northeast3-docker.pkg.dev/nextjs-2022-dev/docker-repo/docker-nextjs-dev --project nextjs-2022-dev --platform managed --region asia-northeast3 --allow-unauthenticated --memory 512Mi --min-instances 0
+    ```
+
+  - 테스트
+    ```shell
+    gcloud run deploy docker-nextjs-test --image asia-northeast3-docker.pkg.dev/nextjs-2022/docker-repo/docker-nextjs-test --project nextjs-2022 --platform managed --region asia-northeast3 --allow-unauthenticated --memory 512Mi --min-instances 0
     ```
 
   - 운영
@@ -415,6 +490,11 @@
 ## GitHub + GCP Cloud Build
 > - https://cloud.google.com/build/docs/automating-builds/build-repos-from-github
 
+- 트리거 생성
+  - Cloud Build 콘솔에서 트리거 생성
+  - Cloud Build GitHub 앱 연동
+    - GitHub 저장소 접근 권한 설정
+
 <br/><br/><br/>
 
 ## GitHub Actions + Firebase Hosting
@@ -422,34 +502,47 @@
 > - https://github.com/marketplace/actions/deploy-to-firebase-hosting
 > - https://github.com/FirebaseExtended/action-hosting-deploy
 > - https://firebase.google.com/docs/hosting/multisites
-```shell
-firebase use {PROJECT_ID | PROJECT_ALIAS}
-firebase target:apply hosting {HOSTING_TARGET_NAME} {HOSTING_SITE_NAME}
-firebase init hosting:github
-```
+> - https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
 
-- 개발 설정
+- GitHub 연동 설정
   ```shell
-  firebase use development
-  firebase target:apply hosting development nextjs-2022-dev
+  firebase use {PROJECT_ID | PROJECT_ALIAS}
+  firebase target:apply hosting {HOSTING_TARGET_NAME} {HOSTING_SITE_NAME}
   firebase init hosting:github
   ```
 
-- 테스트 설정
-  ```shell
-  firebase use test
-  firebase target:apply hosting test nextjs-2022-test
-  firebase init hosting:github
-  ```
+  - 개발
+    ```shell
+    firebase use development
+    firebase target:apply hosting development nextjs-2022-dev
+    firebase init hosting:github
+    ```
+    - GitHub workflow 파일명 변경
+      - 기존 : `.github/workflows/firebase-hosting-merge.yml`
+      - 변경 : `.github/workflows/firebase-hosting-merge-dev.yml`
 
-- 운영 설정
-  ```shell
-  firebase use production
-  firebase target:apply hosting production nextjs-2022
-  firebase init hosting:github
-  ```
+  - 테스트
+    ```shell
+    firebase use test
+    firebase target:apply hosting test nextjs-2022-test
+    firebase init hosting:github
+    ```
+    - GitHub workflow 파일명 변경
+      - 기존 : `.github/workflows/firebase-hosting-merge.yml`
+      - 변경 : `.github/workflows/firebase-hosting-merge-test.yml`
 
-- `.firebaserc` 파일 내용
+
+  - 운영
+    ```shell
+    firebase use production
+    firebase target:apply hosting production nextjs-2022
+    firebase init hosting:github
+    ```
+    - GitHub workflow 파일명 변경
+      - 기존 : `.github/workflows/firebase-hosting-merge.yml`
+      - 변경 : `.github/workflows/firebase-hosting-merge-prod.yml`
+
+- `.firebaserc` 파일 내용 확인
   ```json
   {
     "projects": {
@@ -480,15 +573,123 @@ firebase init hosting:github
   }
   ```
 
+- GitHub workflow 파일 수정
+  - 개발 `.github/workflows/firebase-hosting-merge-dev.yml` 파일 수정
+    - `workflow_dispatch:` 추가 - 수동으로 `workflow`를 실행 할 수 있는 이벤트
+    - `target: development` 추가 - `Firebase Hosting` 배포 대상 지정
+
+  - 테스트 `.github/workflows/firebase-hosting-merge-test.yml` 파일 수정
+    - `workflow_dispatch:` 추가 - 수동으로 `workflow`를 실행 할 수 있는 이벤트
+    - `target: test` 추가 - `Firebase Hosting` 배포 대상 지정
+
+  - 운영 `.github/workflows/firebase-hosting-merge-prod.yml` 파일 수정
+    - `workflow_dispatch:` 추가 - 수동으로 `workflow`를 실행 할 수 있는 이벤트
+    - `target: production` 추가 - `Firebase Hosting` 배포 대상 지정
+    ```yml
+    # This file was auto-generated by the Firebase CLI
+    # https://github.com/firebase/firebase-tools
+
+    name: Deploy to Firebase Hosting on merge PROD
+    'on':
+      push:
+        branches:
+          - main
+      workflow_dispatch:
+    jobs:
+      build_and_deploy:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v2
+          # - run: yarn && yarn build
+          - uses: FirebaseExtended/action-hosting-deploy@v0
+            with:
+              repoToken: '${{ secrets.GITHUB_TOKEN }}'
+              firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NEXTJS_2022 }}'
+              channelId: live
+              projectId: nextjs-2022
+              target: production
+    ```
+
 <br/><br/><br/>
 
-## 수동 배포
+---
+
+<br/><br/><br/>
+
+# 수동 배포
+> - __[주의] `Cloud Run`이 배포 완료 된 후 `Firebase Hosting` 배포를 진행해야 함__
+> - __최초 배포시 `Cloud Run` 생성이 안되어 있으면 `Firebase Hosting` 배포시 오류 발생__
+
+## WEB에서 직접 배포
 - GCP Cloud Run 배포
-  ```shell
-  yarn cloudbuild:submit:dev
-  ```
+  > - https://console.cloud.google.com/cloud-build/triggers
+  > - `GCP 콘솔 사이트` -> `Cloud Build` -> `트리거` 메뉴 이동
+  > - 트리거 목록에서 해당 트리거 우측에 있는 `실행` 버튼 클릭
+
+  - 개발
+    - 트리거 : `build-github-trigger-dev`
+
+  - 테스트
+    - 트리거 : `build-github-trigger-test`
+
+  - 운영
+    - 트리거 : `build-github-trigger-prod`
 
 - Firebase Hosting 배포
-  ```shell
-  yarn firebase:deploy:dev
-  ```
+  > - __[주의] `Cloud Run` 배포 완료 되었는지 확인 후 진행__
+  > - https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow
+  > - `GitHub 사이트` -> `Actions` 메뉴 이동
+  > - 좌측 `Workflows` 목록에서 해당 workflow 선택
+  > - workflow 실행 목록 상단 우측의 `Run workflow` 버튼 클릭
+
+  - 개발
+    - workflow : `Deploy to Firebase Hosting on merge DEV`
+
+  - 테스트
+    - workflow : `Deploy to Firebase Hosting on merge TEST`
+
+  - 운영
+    - workflow : `Deploy to Firebase Hosting on merge PROD`
+
+## 개발자 PC에서 직접 배포
+- GCP Cloud Run 배포
+  - 개발
+    ```shell
+    yarn cloudbuild:submit:dev
+    ```
+
+  - 테스트
+    ```shell
+    yarn cloudbuild:submit:test
+    ```
+
+  - 운영
+    ```shell
+    yarn cloudbuild:submit:prod
+    ```
+
+- Firebase Hosting 배포
+  > - __[주의] `Cloud Run` 배포 완료 되었는지 확인 후 진행__
+
+  - 개발
+    ```shell
+    yarn firebase:deploy:dev
+    ```
+
+  - 테스트
+    ```shell
+    yarn firebase:deploy:test
+    ```
+
+  - 운영
+    ```shell
+    yarn firebase:deploy:prod
+    ```
+
+<br/><br/><br/>
+
+---
+
+<br/><br/><br/>
+
+
