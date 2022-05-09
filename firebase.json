@@ -10,8 +10,8 @@
       ],
       "rewrites": [
         {
-          "source": "/img/**",
-          "destination": "/img"
+          "source": "/images/**",
+          "destination": "/images"
         },
         {
           "source": "/locales/**",
@@ -40,7 +40,7 @@
           "headers": [
             {
               "key": "Cache-Control",
-              "value": "max-age=7200"
+              "value": "max-age=60"
             }
           ]
         }
@@ -56,8 +56,8 @@
       ],
       "rewrites": [
         {
-          "source": "/img/**",
-          "destination": "/img"
+          "source": "/images/**",
+          "destination": "/images"
         },
         {
           "source": "/locales/**",
@@ -86,7 +86,7 @@
           "headers": [
             {
               "key": "Cache-Control",
-              "value": "max-age=7200"
+              "value": "max-age=60"
             }
           ]
         }
@@ -102,8 +102,8 @@
       ],
       "rewrites": [
         {
-          "source": "/img/**",
-          "destination": "/img"
+          "source": "/images/**",
+          "destination": "/images"
         },
         {
           "source": "/locales/**",
@@ -132,7 +132,7 @@
           "headers": [
             {
               "key": "Cache-Control",
-              "value": "max-age=7200"
+              "value": "max-age=31536000"
             }
           ]
         }
