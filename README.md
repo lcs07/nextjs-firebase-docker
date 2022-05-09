@@ -592,6 +592,8 @@
 ## GitHub + GCP Cloud Build
 > - https://cloud.google.com/build/docs/automating-builds/build-repos-from-github
 
+![GCP Cloud Build Dashboard](https://github.com/lcs07/nextjs-firebase-docker/blob/dev/public/images/GCP_Cloud_Build_Dashboard.png?raw=true)
+
 - 트리거 생성
   - Cloud Build 콘솔에서 트리거 생성
   - Cloud Build GitHub 앱 연동
@@ -605,6 +607,8 @@
 > - https://github.com/FirebaseExtended/action-hosting-deploy
 > - https://firebase.google.com/docs/hosting/multisites
 > - https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
+
+![GitHub Actions](https://github.com/lcs07/nextjs-firebase-docker/blob/dev/public/images/GitHub_Actions.png?raw=true)
 
 - GitHub 연동 설정
   ```shell
@@ -728,6 +732,8 @@
   > - `GCP 콘솔 사이트` -> `Cloud Build` -> `트리거` 메뉴 이동
   > - 트리거 목록에서 해당 트리거 우측에 있는 `실행` 버튼 클릭
 
+  ![GCP Cloud Build Trigger](https://github.com/lcs07/nextjs-firebase-docker/blob/dev/public/images/GCP_Cloud_Build_Trigger.png?raw=true)
+
   - 개발
     - 트리거 : `build-github-trigger-dev`
 
@@ -743,6 +749,8 @@
   > - `GitHub 사이트` -> `Actions` 메뉴 이동
   > - 좌측 `Workflows` 목록에서 해당 workflow 선택
   > - workflow 실행 목록 상단 우측의 `Run workflow` 버튼 클릭
+
+  ![GitHub Actions Workflow](https://github.com/lcs07/nextjs-firebase-docker/blob/dev/public/images/GitHub_Actions_Workflow.png?raw=true)
 
   - 개발
     - workflow : `Deploy to Firebase Hosting on merge DEV`
