@@ -1,6 +1,6 @@
 # Next.js + Firebase + Cloud Run
 
-[![Deploy to Firebase Hosting on merge PROD](https://github.com/lcs07/nextjs-firebase-docker/actions/workflows/firebase-hosting-merge-prod.yml/badge.svg?branch=main)](https://github.com/lcs07/nextjs-firebase-docker/actions/workflows/firebase-hosting-merge-prod.yml)
+[![Deploy to Firebase Hosting on merge PROD](https://github.com/lcs07/nextjs-firebase-docker/actions/workflows/firebase-hosting-merge-prod.yml/badge.svg)](https://github.com/lcs07/nextjs-firebase-docker/actions/workflows/firebase-hosting-merge-prod.yml)
 
 <br/><br/><br/>
 
