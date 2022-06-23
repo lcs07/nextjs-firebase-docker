@@ -450,25 +450,30 @@
     ```
 
 - 빌드 배포 서비스 계정 권한
-  > - https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-run#continuous-iam
-  ```shell
-  gcloud iam service-accounts add-iam-policy-binding \
-    {PROJECT_NUMBER}-compute@developer.gserviceaccount.com \
-    --member="serviceAccount:{PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
-    --role="roles/iam.serviceAccountUser"
-  ```
+  - 필수 IAM 권한
+    > - https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-run#required_iam_permissions
+    - `Google Cloud Console` -> `Cloud Build` -> `설정` -> `서비스 계정` -> `Cloud Run` 사용 설정
 
-  - 개발 프로젝트
-    ```shell
-    ```
-
-  - 테스트, 운영 프로젝트
+  - 최소 IAM 권한
+    > - https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-run#continuous-iam
     ```shell
     gcloud iam service-accounts add-iam-policy-binding \
-      28623504743-compute@developer.gserviceaccount.com \
-      --member="serviceAccount:28623504743@cloudbuild.gserviceaccount.com" \
+      {PROJECT_NUMBER}-compute@developer.gserviceaccount.com \
+      --member="serviceAccount:{PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
       --role="roles/iam.serviceAccountUser"
     ```
+
+    - 개발 프로젝트
+      ```shell
+      ```
+
+    - 테스트, 운영 프로젝트
+      ```shell
+      gcloud iam service-accounts add-iam-policy-binding \
+        28623504743-compute@developer.gserviceaccount.com \
+        --member="serviceAccount:28623504743@cloudbuild.gserviceaccount.com" \
+        --role="roles/iam.serviceAccountUser"
+      ```
 
 - 빌드 구성 파일 설정
   > - https://cloud.google.com/build/docs/build-config-file-schema?hl=ko
