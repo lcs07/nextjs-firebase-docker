@@ -45,7 +45,7 @@
     "firebase:deploy:prod": "yarn delete && yarn use:prod && cross-env NODE_ENV=production firebase deploy --only hosting:production"
   },
   "dependencies": {
-    "next": "^12.1.5",
+    "next": "^14.2.21",
     "next-i18next": "^11.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
